@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LoadingAnimation extends StatefulWidget {
 
   final List<Color> colors;
+  double opacity;
 
-  const LoadingAnimation({super.key, required this.colors});
+  LoadingAnimation({super.key, required this.colors, required this.opacity});
 
   @override
   State<LoadingAnimation> createState() => _LoadingAnimationState();
@@ -62,31 +64,33 @@ class _LoadingAnimationState extends State<LoadingAnimation> with TickerProvider
         
       });
     });
-    
+
     Future.delayed(
       const Duration(milliseconds: 0),
       () => {
-        _controller1.repeat(reverse: true)
+        _controller1.repeat(reverse: true),
       }
     );
     Future.delayed(
       const Duration(milliseconds: 200),
       () => {
-        _controller2.repeat(reverse: true)
+        _controller2.repeat(reverse: true),
       }
     );
     Future.delayed(
       const Duration(milliseconds: 400),
       () => {
-        _controller3.repeat(reverse: true)
+        _controller3.repeat(reverse: true),
       }
     );
     Future.delayed(
       const Duration(milliseconds: 600),
       () => {
-        _controller4.repeat(reverse: true)
+        _controller4.repeat(reverse: true),
       }
     );
+
+    
     
   }
 
@@ -95,79 +99,83 @@ class _LoadingAnimationState extends State<LoadingAnimation> with TickerProvider
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.black.withOpacity(0.9), Colors.black.withOpacity(0.6),],
-          transform: const GradientRotation(pi/4)
-        )
-      ),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Center(
-        child: SizedBox(
-          width: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 10,
-                height: _animation1.value*10,
-                decoration: BoxDecoration(
-                  color: widget.colors[_animation1.value.toInt()],
-                  borderRadius: BorderRadius.circular(90),
-                  border: Border.all(color: widget.colors[_animation1.value.toInt()%10], width: _animation1.value )
+    return AnimatedOpacity(
+      opacity: widget.opacity,
+      duration: const Duration(milliseconds: 200),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black.withOpacity(0.9), Colors.black.withOpacity(0.6),],
+            transform: const GradientRotation(pi/4)
+          )
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+          child: SizedBox(
+            width: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 10,
+                  height: _animation1.value*10,
+                  decoration: BoxDecoration(
+                    color: widget.colors[_animation1.value.toInt()],
+                    borderRadius: BorderRadius.circular(90),
+                    border: Border.all(color: widget.colors[_animation1.value.toInt()%10], width: _animation1.value )
+                  ),
                 ),
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 10,
-                height: _animation2.value*10,
-                decoration: BoxDecoration(
-                  color: widget.colors[_animation2.value.toInt()],
-                  borderRadius: BorderRadius.circular(90),
-                  border: Border.all(color: widget.colors[_animation2.value.toInt()%10], width: _animation2.value )
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 10,
+                  height: _animation2.value*10,
+                  decoration: BoxDecoration(
+                    color: widget.colors[_animation2.value.toInt()],
+                    borderRadius: BorderRadius.circular(90),
+                    border: Border.all(color: widget.colors[_animation2.value.toInt()%10], width: _animation2.value )
+                  ),
                 ),
-              ),
-              
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 10,
-                height: _animation3.value*10,
-                decoration: BoxDecoration(
-                  color: widget.colors[_animation3.value.toInt()],
-                  borderRadius: BorderRadius.circular(90),
-                  border: Border.all(color: widget.colors[_animation3.value.toInt()%10], width: _animation3.value)
+                
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 10,
+                  height: _animation3.value*10,
+                  decoration: BoxDecoration(
+                    color: widget.colors[_animation3.value.toInt()],
+                    borderRadius: BorderRadius.circular(90),
+                    border: Border.all(color: widget.colors[_animation3.value.toInt()%10], width: _animation3.value)
+                  ),
                 ),
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 10,
-                height: _animation4.value*10,
-                decoration: BoxDecoration(
-                  color: widget.colors[_animation4.value.toInt()],
-                  borderRadius: BorderRadius.circular(90),
-                  border: Border.all(color: widget.colors[_animation4.value.toInt()%10], width: _animation4.value )
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 10,
+                  height: _animation4.value*10,
+                  decoration: BoxDecoration(
+                    color: widget.colors[_animation4.value.toInt()],
+                    borderRadius: BorderRadius.circular(90),
+                    border: Border.all(color: widget.colors[_animation4.value.toInt()%10], width: _animation4.value )
+                  ),
                 ),
-              ),
-            ]
+              ]
+            ),
           ),
         ),
       ),
     );
-
-    
-   
   }
 
   @override
   void dispose() {
+    _controller1.stop();
+    _controller2.stop();
+    _controller3.stop();
+    _controller4.stop();
     _controller1.dispose();
     _controller2.dispose();
     _controller3.dispose();
     _controller4.dispose();
     super.dispose();
-    
   }
 }

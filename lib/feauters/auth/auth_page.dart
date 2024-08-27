@@ -1,6 +1,3 @@
-
-import 'dart:math';
-
 import 'package:crowd_sound/components/loading_animation.dart';
 import 'package:crowd_sound/components/main_logo.dart';
 import 'package:crowd_sound/feauters/auth/components/social_networks.dart';
@@ -12,7 +9,6 @@ import 'package:crowd_sound/components/painter.dart';
 import 'package:crowd_sound/pages/welcome_page/welcome_page.dart';
 import 'package:crowd_sound/palettes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -40,10 +36,7 @@ class _AuthPageState extends State<AuthPage> {
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  transform: const GradientRotation(8*pi/3),
-                  colors: [Theme.of(context).primaryColorDark, Theme.of(context).secondaryHeaderColor]
-                )
+                color: Colors.black.withOpacity(0.5)
               ),
             ),
             Align(
@@ -62,21 +55,6 @@ class _AuthPageState extends State<AuthPage> {
                 )
               ),
             ),
-            Positioned(
-              top: -50,
-              right: -150,
-              child: RotatedBox(
-                quarterTurns: 2,
-                child: Image.asset(
-                  "assets/images/belt.png",
-                  fit: BoxFit.fitWidth,
-                  isAntiAlias: true,
-                  height: 400,
-                  
-                ),
-              ),
-            ),
-            
             Align(
               alignment: Alignment.bottomCenter,
               child: CustomPaint(
@@ -127,26 +105,19 @@ class _AuthPageState extends State<AuthPage> {
               child: FormTile(onTap: () {
                 setState(() {
                   isLoading = true;
-                  Future.delayed(
-                    const Duration(seconds: 2),
-                    () {
-                      if (selectedIndex == 0) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage())).then((_) {
+                  if (selectedIndex == 0) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                    isLoading = false;
+                    setState(() {});
+                  } else {
+                    Navigator.push(context, PageRouteBuilder(pageBuilder: (_, __, ___) => 
+                      const WelcomePage(), transitionDuration: const Duration(seconds: 0)
+                    )).then((value) {
+                      setState(() {
                         isLoading = false;
-                        setState(() {});
                       });
-                      } else {
-                        Navigator.push(context, PageRouteBuilder(pageBuilder: (_, __, ___) => 
-                          const WelcomePage(), transitionDuration: const Duration(seconds: 0)
-                        )).then((value) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        });
-                      }
-                      
-                    }
-                  );
+                    });
+                  }
                 }
       
                 );
@@ -155,7 +126,7 @@ class _AuthPageState extends State<AuthPage> {
             )
             ),
 
-            isLoading ? const LoadingAnimation(colors: purplePalette) : const SizedBox(width: 0, height: 0,),
+            IgnorePointer(ignoring: !isLoading,child: LoadingAnimation(colors: purplePalette, opacity: isLoading ? 1 : 0)),
             
           ],
         ),
