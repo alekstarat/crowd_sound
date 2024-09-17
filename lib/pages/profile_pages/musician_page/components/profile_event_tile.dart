@@ -1,11 +1,10 @@
 import 'dart:math';
-import 'dart:convert';
-import 'package:crowd_sound/models/event_model.dart';
-import 'package:crowd_sound/models/place_model.dart';
 import 'package:crowd_sound/palettes.dart';
+import 'package:database_repository/database_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileEventTile extends StatefulWidget {
 
@@ -19,46 +18,31 @@ class ProfileEventTile extends StatefulWidget {
 
 class _ProfileEventTileState extends State<ProfileEventTile> {
 
-  bool isOpened = false;
+  bool isOpened = false, isLoaded = false;
 
   final Dio dio = Dio();
-  EventModel event = EventModel.empty;
-  PlaceModel place = PlaceModel.empty;
-  void getHTTP(int id) async {
-    try {
-      await dio.get("${HOST_URL}event/$id").then((v) {
-        setState(() {
-          event = event.copyWith(
-            name: v.data['name'],
-            desc: v.data['desc'],
-            date: v.data['date'],
-            images: json.decode(v.data['images']),
-            place: v.data['place']
-          );
+  late dynamic event, place;
+
+  void loadData() {
+    context.read<DatabaseRepository>().getEventModelData(widget.id).then((val) {
+      setState(() {
+        event = val;
+        print(event);
+        context.read<DatabaseRepository>().getPlaceModelData(event.place).then((val) {
+          setState(() {
+            place = val;
+            isLoaded = true;
+            print(place);
+          });
         });
       });
-    } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
-    await dio.get("${HOST_URL}place/${event.place}").then((v) {
-        setState(() {
-          place = place.copyWith(
-            name: v.data['name'],
-            social: v.data['social'],
-            images: json.decode(v.data['images']) as List<dynamic>,
-            events: json.decode(v.data['events']) as List<dynamic>,
-            position: json.decode(v.data['position']) as List<dynamic>
-          );
-        });
-      });
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getHTTP(widget.id);
+    loadData();
   }
 
   @override
@@ -92,7 +76,7 @@ class _ProfileEventTileState extends State<ProfileEventTile> {
         },
         child: Stack(
           children: [
-            ClipRRect(
+            if (isLoaded) ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: event.images.isNotEmpty ? Image.network(
                 '${HOST_URL}image/${event.images[0]}', 
@@ -134,7 +118,7 @@ class _ProfileEventTileState extends State<ProfileEventTile> {
                 ),
               ),
             ),
-            Align(
+            if (isLoaded) Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -156,13 +140,12 @@ class _ProfileEventTileState extends State<ProfileEventTile> {
                       ),
                     ),
                     Text(
-                      event.name == "" ? place.name : event.name!,
+                      event.name ?? place.name,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.6),
                         fontWeight: FontWeight.bold,
                         fontFamily: 'PoiretOne',
                         fontSize: 20
-                    
                       ),
                     ),
                   ],

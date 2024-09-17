@@ -2,12 +2,14 @@ import 'package:crowd_sound/feauters/auth/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationForm extends StatelessWidget {
-  const RegistrationForm({super.key});
+
+  final TextEditingController loginController, passwordController, passwordCheckController;
+
+  const RegistrationForm({super.key, required this.loginController, required this.passwordController, required this.passwordCheckController});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 170),
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,7 +25,7 @@ class RegistrationForm extends StatelessWidget {
           ),
           SizedBox(height: MediaQuery.of(context).size.height*0.03,),
           CustomTextfield(
-            controller: TextEditingController(), 
+            controller: loginController, 
             title: "Имя пользователя", 
             obscure: false, 
             icon: const Icon(Icons.person_2_outlined, 
@@ -31,14 +33,14 @@ class RegistrationForm extends StatelessWidget {
           ),),
           SizedBox(height: MediaQuery.of(context).size.height*0.03,),
           CustomTextfield(
-            controller: TextEditingController(), 
+            controller: passwordController, 
             title: "Пароль", 
             obscure: true, 
             icon: const Icon(Icons.lock, color: Colors.white,)
           ),
           SizedBox(height: MediaQuery.of(context).size.height*0.03,),
           CustomTextfield(
-            controller: TextEditingController(), 
+            controller: passwordCheckController, 
             title: "Повтор пароля", 
             obscure: true, 
             icon: const Icon(Icons.lock, color: Colors.white,)

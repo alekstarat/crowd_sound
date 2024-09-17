@@ -6,8 +6,9 @@ class CustomTextfield extends StatefulWidget {
   final String title;
   final bool obscure;
   final Icon icon;
+  final double width;
 
-  const CustomTextfield({super.key, required this.controller, required this.title, required this.obscure, required this.icon});
+  const CustomTextfield({super.key, required this.controller, required this.title, required this.obscure, required this.icon, this.width = 240});
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -18,7 +19,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   Widget build(BuildContext context) {
     return Container(
       
-      width: 240,
+      width: widget.width,
       height: kToolbarHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),

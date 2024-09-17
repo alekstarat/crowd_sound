@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class GroupModel {
+import 'package:database_repository/src/models/model.dart';
+
+class GroupModel implements Model{
   final String name;
   final String? desc;
   final List<dynamic> images, audios, events, social;
@@ -31,6 +33,7 @@ class GroupModel {
     social: json.decode(val['social'] as String) as List<dynamic>, 
   );
 
+  @override
   Map<String, Object?> toJson() {
     return {
       'name': name,
@@ -42,6 +45,7 @@ class GroupModel {
     };
   }
 
+  @override
   GroupModel copyWith({
       String? desc, name, 
       List<dynamic>? images, audios, events, social, 

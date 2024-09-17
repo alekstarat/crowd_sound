@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
+  flutter_bloc: ^8.1.6
   flutter_map: ^7.0.2
   geolocator: ^11.1.0
   provider: ^6.1.2
@@ -21,6 +22,11 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   story: ^1.1.0
   video_player: ^2.9.1
+
+  database_repository:
+    path: packages/database_repository
+  crypto: ^3.0.5
+  yandex_maps_mapkit: ^4.7.2-beta6
 
 dev_dependencies:
   flutter_test:

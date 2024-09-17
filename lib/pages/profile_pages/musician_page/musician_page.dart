@@ -1,13 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:crowd_sound/components/actions_button.dart';
 import 'package:crowd_sound/components/loading_animation.dart';
-import 'package:crowd_sound/models/group_model.dart';
 import 'package:crowd_sound/pages/profile_pages/musician_page/components/photo_name_widget.dart';
 import 'package:crowd_sound/pages/profile_pages/musician_page/tabs/events_profile_tab.dart';
 import 'package:crowd_sound/pages/profile_pages/musician_page/tabs/music_profile_tab.dart';
 import 'package:crowd_sound/palettes.dart';
-import 'package:dio/dio.dart';
+import 'package:database_repository/database_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class MusicianPage extends StatefulWidget {
@@ -24,30 +24,42 @@ class _MusicianPageState extends State<MusicianPage> with TickerProviderStateMix
 
   final CarouselController controller = CarouselController();
   //GroupModel group = GroupModel.empty;
-  late GroupModel group;
+  
+  late dynamic group;
   bool isLoaded = false;
-  final Dio dio = Dio();
   late final TabController tabController;
 
-  void getHTTP(int id) async {
-    setState(() {
-      isLoaded = false;
-    });
-      await dio.get('${HOST_URL}group/$id').then((v) {
+  // void getHTTP(int id) async {
+  //   setState(() {
+  //     isLoaded = false;
+  //   });
+  //     await dio.get('${HOST_URL}group/$id').then((v) {
+  //       setState(() {
+  //         group = GroupModel.fromJson(v.data);
+  //         isLoaded = true;
+  //       });
+  //     });
+    
+    
+  // }
+
+  void loadData() {
+      context.read<DatabaseRepository>().getGroupModelData(widget.id).then((val) {
         setState(() {
-          group = GroupModel.fromJson(v.data);
+          group = val;
           isLoaded = true;
+          print(group);
         });
       });
-    
-    
   }
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
-    getHTTP(widget.id);
+    loadData();
+    
+    
   }
 
   @override

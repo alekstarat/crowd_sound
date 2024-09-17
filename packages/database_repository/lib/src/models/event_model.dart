@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class EventModel {
+import 'package:database_repository/src/models/model.dart';
+
+class EventModel implements Model{
 
   final String date, desc;
   final String? name;
@@ -20,13 +22,14 @@ class EventModel {
   );
 
   EventModel.fromJson(Map<String, Object?> val) : this(
-    name: val['name']! as String?,
+    name: val['name'] as String?,
     images: json.decode(val['images'] as String) as List<dynamic>,
     date: val['date']! as String,
     desc: json.decode(val['desc'] as String) as String,
     place: val['place']! as int
   ); 
 
+  @override
   Map<String, Object?> toJson() {
     return {
       'name' : name,
@@ -36,7 +39,8 @@ class EventModel {
       'place' : place
     };
   }
-
+  
+  @override
   EventModel copyWith({
     String? name, date, desc,
     List<dynamic>? images,
